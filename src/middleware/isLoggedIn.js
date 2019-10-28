@@ -1,15 +1,14 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user.model');
+const User = require('../models/user');
 
 const requireUser = async (req, res, next) => {
   const token = req.headers["authorization"];
-  const verySecret = "6926F2BF8BC542620DB47571A88C1DA761C976744CA554833C4BAA917ACD0E20";
   
   if (token == null) {
     res.status(401).json({ error: "No Authorized" });
   } else {
     try {
-      const payload = jwt.verify(token, verySecret);
+      const payload = jwt.verify(token, process.env.JWT_SECRET);
       const userId = payload.userId;
       const user = await User.findOne({ _id: userId });
       if (user) {
@@ -21,6 +20,7 @@ const requireUser = async (req, res, next) => {
       }
 
     } catch (err) {
+      console.log("asdsa")
       console.log(err)
       res.status(401).json({ error: "Invalid token" });
     }
