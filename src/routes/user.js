@@ -11,8 +11,22 @@ const User = require('../models/user');
 const isLoggedIn = require("../middleware/isLoggedIn");
 const checkValid = require("../middleware/checkValid");
 
-router.get('/user', isLoggedIn, async (req, res, next) => {
-  res.status(200).json(req.currentUser)  
+router.get('/current-user', async (req, res, next) => {
+  const token = req.headers["authorization"];
+  
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = payload.userId;
+    const user = await User.findById(userId, "_id email username");
+    if (user) {
+      res.status(200).json(user);
+
+    } else {
+      res.status(204).json({ msg: "User not found" });
+    }
+  } catch (err) {
+    res.status(204).json({ msg: "User not found" });
+  }
 });
 
 router.get('/user/:id', checkValid.requestBody, async (req, res, next) => {

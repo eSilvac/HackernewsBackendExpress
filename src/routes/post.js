@@ -8,7 +8,6 @@ const checkValid = require("../middleware/checkValid");
 
 // List posts
 router.get('/posts', async (req, res, next) => {
-  result = [];
   try {
     const posts = await Post.find();
     res.status(200).json(posts);  
@@ -18,10 +17,11 @@ router.get('/posts', async (req, res, next) => {
 });
 
 // Show Post
-router.get('/posts/:id', isLoggedIn, checkValid.requestParams, async (req, res, next) => {
+router.get('/posts/:id', checkValid.requestParams, async (req, res, next) => {
   try {
-    const post = await Post.find({id: req.params.id,_user: req.currentUser});
-    res.status(200); 
+    console.log(req.params)
+    const post = await Post.findById(req.params.id);
+    res.status(200).json(post); 
   } catch (err) {
     next(err);   
   }

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const db = process.env.MONGODB_URI || "mongodb://localhost:27017/<project>";
+const db = process.env.MONGODB_URI || "mongodb://localhost:27017/hackernews";
 const options = {
   useCreateIndex: true,
   useNewUrlParser: true,
